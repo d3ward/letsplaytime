@@ -1,0 +1,10 @@
+{
+    "name": "Let's Play",
+    "description": "Don't have pen and paper? No problem! Play the classic Tic Tac Toe game in your browser!",
+    "author": "d3ward",
+    "display": "standalone",
+    "background_color": "#334FAC",
+    "theme_color": "#334FAC",
+    "orientation": "portrait",
+    "homepage_url": "https://github.com/d3ward/letsplay"
+}
