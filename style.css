@@ -647,15 +647,17 @@ header + .hero {
     background: var(--bg-card);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+    transition: all .4s ease-out;
   }
   .card > * {
     width: 100%;
     margin: 0;
   }
   .card > img {
-    height: auto;
+    height: 100px;
     border-radius: var(--radius);
     width: 100%;
+    object-fit: cover;
   }
   .card > img.full {
     width: calc( 100% + 2rem );
@@ -668,6 +670,9 @@ header + .hero {
   .card > img.full:last-child {
     border-radius: 0 0 var(--radius) var(--radius);
     margin: 0 -1rem -1rem -1rem;
+  }
+  #home .card:hover{
+      transform: translateY(10px);
   }
 
 

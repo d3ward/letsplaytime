@@ -9,8 +9,7 @@
     <!-- Primary Meta Tags -->
     <title>Let's Play</title>
     <meta name="title" content="Let's Play">
-    <meta name="description"
-        content=" A collection of classic games to kill time  ">
+    <meta name="description" content=" A collection of classic games to kill time  ">
     <meta name="keywords" content="tic tac toe, progressive web app, pwa, online game, javascript, browser, web app" />
     <meta name="author" content="Eduard Ursu" />
     <meta name="theme-color" content="#ffffff" />
@@ -20,6 +19,24 @@
 </head>
 
 <body>
+    <div class="modal" id="mdl0">
+        <div>
+            <header>
+                <h3>Modal Header</h3>
+                <button class="close-modal">Close</button>
+            </header>
+            <hr>
+            <div>
+                <div id="notification">A new version of this app is available. <br>Click <a id="reload">here</a> to update.</div>
+            </div>
+            <hr>
+            <footer>
+                <button class="close-modal mw-100">
+                    Ok
+                </button>
+            </footer>
+        </div>
+    </div>
     <header class="fixed">
         <nav>
             <a href="index.html">
@@ -74,11 +91,11 @@
     </header>
     <main>
         <div class="pages">
-            <section id="home" class="page-active">
+            <section id="home" class="page-active _aos-top">
                 <div class="grid">
                     <div class="col-6" topage="#tris">
                         <div class="card">
-                            <img src="" alt="">
+                            <img src="./src/svg/tris_p.svg" alt="" class="full">
                             <h3>Tic Tac Toe</h3>
                         </div>
                     </div>
@@ -90,8 +107,8 @@
                     </div>
                 </div>
             </section>
-            <section id="tris">
-                <button topage="#home">Back to home</button>
+            <section id="tris" class="_aos-top">
+                <button topage="#home"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg> Back to home</button>
                 <h1>Tic Tac Toe</h1>
                 <div class="flip-card">
                     <div class="tris-grid">
@@ -156,21 +173,13 @@
                         <button class="reset">Reset Score</button>
                     </div>
                 </div>
-                
+
         </div>
 
         </section>
         </div>
 
-
-
     </main>
-    <footer>
-
-    </footer>
-
-    <div id="notification">A new version of this app is available. <br>Click <a id="reload">here</a> to update.</div>
-
     <script src="confetti.browser.min.js"></script>
     <script src="script.js"></script>
 
