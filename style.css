@@ -289,6 +289,8 @@ nav>ul {
 
 nav>ul>li {
   gap: 0.5rem;
+  background: var(--bg2);
+  border-radius: var(--radius);
 }
 
 nav>ul>li>a,
@@ -312,7 +314,8 @@ nav>ul>li .nav-item.active {
     bottom: 5rem;
     padding: 0.5rem;
     right: -100%;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     background: var(--bg-nav);
     width: calc(100% - 1rem);
     border-radius: 10px;
@@ -801,9 +804,13 @@ button>svg,
 
 #c4_columns {
   margin: 0;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    gap: 10px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
 }
 
 #c4_columns>div {
@@ -856,6 +863,7 @@ button>svg,
 #tris .tris-grid>div {
   background: var(--bg3);
   border-radius: 10px;
+  aspect-ratio: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -948,24 +956,37 @@ button>svg,
 
 /* Connect 4 table */
 #c4_table>div {
+  position: relative;
   background: var(--bg3);
 }
-
-.p1-disc {
+#c4_table>div::after{
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  content: '';
+  width: 100%;
+  height: 100%;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+.p1-disc::after {
+  transform: scale(1)!important;
   background: var(--red) !important;
 }
 
-.p2-disc {
+.p2-disc::after {
+  transform: scale(1)!important;
   background: var(--yellow) !important;
 }
 
 #c4_table {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-  grid-gap: 10px;
-  border-bottom: 10px solid var(--blue);
-    padding-bottom: 10px;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-gap: 10px;
+    border-bottom: 10px solid var(--blue);
+    padding: 10px;
     width: 100%;
     height: 100%;
 }
@@ -987,7 +1008,10 @@ button>svg,
   height: 1.3rem;
   width: 1.3rem;
   fill: currentColor;
-  margin: 0 auto;
+}
+._2-col{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 ._pu {

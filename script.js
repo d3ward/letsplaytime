@@ -12,7 +12,6 @@ function navbar() {
     }
     if (t.n) {
         document.querySelector("nav>button").addEventListener("click", function () {
-            console.log("toggleNav");
             if (t.n.classList.contains("active"))
                 t.close();
             else
@@ -26,17 +25,17 @@ function modal(id) {
     var t = this;
     t.m = document.querySelector((id) ? id : '.modal');
     if (t.m) {
-        t.theBoardy = document.body.classList;
+        t.c4_boardy = document.body.classList;
         t.targets = document.querySelectorAll('[data-toggle="' + t.m.id + '"]');
         t.closebtns = t.m.querySelectorAll('.close-modal');
     }
     t.show = function () {
-        t.theBoardy.add('_overflowhidden');
+        t.c4_boardy.add('_overflowhidden');
         t.m.classList.add('_show-modal');
     }
     t.hide = function () {
         t.m.classList.remove('_show-modal');
-        t.theBoardy.remove('_overflowhidden');
+        t.c4_boardy.remove('_overflowhidden');
     }
     t.listeners = function () {
         t.targets.forEach(el => {
@@ -479,37 +478,42 @@ function Tris() {
 }
 
 function ConnectFour() {
-    var theBoard = [];
+    var c4_board = [];
     var c4_table = [];
     var turn = 1;
     const flipCard = document.querySelector('#connect4 .flip-card');
-    var htmlTurn = document.getElementById("c4_turn");
+    var c4_turn = document.getElementById("c4_turn");
     var c4_elements =document.querySelectorAll("#c4_table>div");
+    var c4_columns =document.querySelectorAll("#c4_columns>div");
     console.log(c4_elements)
     var winner = document.getElementById("c4_winner");
     var playerOneVictories = 0;
     var playerTwoVictories = 0;
     var paused = 0;
     // Create the JS array for the board
-    function createBoard(rows, columns) {
-        for (var i = 0; i < rows; i++) {
-            theBoard[i] = [];
+    function createBoard(r, c) {
+        for (var i = 0; i < r; i++) {
+            c4_board[i] = [];
             c4_table[i]= [];
-            for (var j = 0; j < columns; j++) {
-                theBoard[i][j] = 0;
-                c4_table[i][j] = c4_elements[j + (columns*i)];
+            for (var j = 0; j < c; j++) {
+                c4_board[i][j] = 0;
+                c4_table[i][j] = c4_elements[j + (c*i)];
             }
         }
     }
-    var clearGrid = () => {
     
-        theBoard = [];
+    for (let i = 0; i < c4_columns.length; i++) {
+        const el = c4_columns[i];
+        el.addEventListener("click", () => {pickColumn(i);});
+    }
+    var clearGrid = () => {
+        paused=0;
+        c4_board = [];
         c4_table = [];
         c4_elements.forEach(function (f) {
-            f.removeAttribute("class")
+            f.removeAttribute("class");
         });
         createBoard(6,7);
-        console.log(theBoard)
     }
     
     var playAgain = () => {
@@ -549,39 +553,39 @@ function ConnectFour() {
     }
     function checkIfWon(p, r,c){
         if(r<3)//vertical down
-            if(chkLine(theBoard[r][c], theBoard[r+1][c], theBoard[r+2][c], theBoard[r+3][c]))
+            if(chkLine(c4_board[r][c], c4_board[r+1][c], c4_board[r+2][c], c4_board[r+3][c]))
                 displayWinner(p);
         else if(r>2)//vertical up
-            if(chkLine(theBoard[r][c], theBoard[r-1][c], theBoard[r-2][c], theBoard[r-3][c]))
+            if(chkLine(c4_board[r][c], c4_board[r-1][c], c4_board[r-2][c], c4_board[r-3][c]))
                 displayWinner(p);
         if(c<4)//horizontal right
-            if(chkLine(theBoard[r][c], theBoard[r][c+1], theBoard[r][c+2], theBoard[r][c+3]))
+            if(chkLine(c4_board[r][c], c4_board[r][c+1], c4_board[r][c+2], c4_board[r][c+3]))
                 displayWinner(p);
         else if(c>3)//horizontal left
-            if(chkLine(theBoard[r][c], theBoard[r][c-1], theBoard[r][c-2], theBoard[r][c-3]))
+            if(chkLine(c4_board[r][c], c4_board[r][c-1], c4_board[r][c-2], c4_board[r][c-3]))
                 displayWinner(p);
 
         if(r<3 && c<4)//diagonal bottom right
-            if(chkLine(theBoard[r][c], theBoard[r+1][c+1], theBoard[r+2][c+2], theBoard[r+3][c+3]))
+            if(chkLine(c4_board[r][c], c4_board[r+1][c+1], c4_board[r+2][c+2], c4_board[r+3][c+3]))
                 displayWinner(p);
         if(r>2 && c<4)
-            if(chkLine(theBoard[r][c], theBoard[r-1][c+1], theBoard[r-2][c+2], theBoard[r-3][c+3]) )
+            if(chkLine(c4_board[r][c], c4_board[r-1][c+1], c4_board[r-2][c+2], c4_board[r-3][c+3]) )
                 displayWinner(p);
         if(r>3 && c>2)//diagonal top left
-            if(chkLine(theBoard[r][c], theBoard[r-1][c-1], theBoard[r-2][c-2], theBoard[r-3][c-3]))
+            if(chkLine(c4_board[r][c], c4_board[r-1][c-1], c4_board[r-2][c-2], c4_board[r-3][c-3]))
                 displayWinner(p);
         if(r>2 && c<4)
-            if(chkLine(theBoard[r][c], theBoard[r-1][c+1], theBoard[r-2][c+2], theBoard[r-3][c+3]) )
+            if(chkLine(c4_board[r][c], c4_board[r-1][c+1], c4_board[r-2][c+2], c4_board[r-3][c+3]) )
                 displayWinner(p);
     }
     function pickColumn(column) {
         if (paused != 1) {
-            var aCol = theBoard.map(function(value,index) { return value[column]; });
+            var aCol = c4_board.map(function(value,index) { return value[column]; });
             if (aCol.indexOf(0) == -1) {console.log("Column is full");
             } else {
                 for (let i = 5; i> -1; i--) {
-                     if (theBoard[i][column] != 1 && theBoard[i][column] != 2) {
-                        theBoard[i][column] = turn;
+                     if (c4_board[i][column] != 1 && c4_board[i][column] != 2) {
+                        c4_board[i][column] = turn;
                         colorBoard( i,column ,turn);
                         updatePlayer();
                         checkIfWon(turn,i,column);
@@ -592,31 +596,24 @@ function ConnectFour() {
             }
         }
     }
-    var btns = document.querySelectorAll("#c4_columns>div");
-    for (let index = 0; index < btns.length; index++) {
-        const element = btns[index];
-        element.addEventListener("click", () => {
-            pickColumn(index);
-        });
-        
-    }
+   
    
     // Swap turns
     function updatePlayer() {
         if (turn == 1) {
-            htmlTurn.innerHTML = "Player 2 Turn";
-            htmlTurn.style.background="var(--yellow)";
+            c4_turn.innerHTML = "Player 2 Turn";
+            c4_turn.style.background="var(--yellow)";
             turn = 2;
         } else if (turn == 2) {
-            htmlTurn.innerHTML = "Player 1 Turn";
-            htmlTurn.style.background="var(--red)";
+            c4_turn.innerHTML = "Player 1 Turn";
+            c4_turn.style.background="var(--red)";
             turn = 1;
         }
     }
     // Clear the board and unpause the game
     function reset() {
         paused = 0;
-        theBoard = [];
+        c4_board = [];
         createBoard(7, 6);
         maintainBoard();
         winner.innerHTML = "";
