@@ -647,4 +647,8 @@ document.addEventListener("DOMContentLoaded", () => {
     new pagesRoute();
     new Tris();
     new ConnectFour();
+
+    // Play logo animation once
+    var logo = document.querySelector('#letsplay_logo');
+    logo.classList.add('active');
 });
