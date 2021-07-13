@@ -26,17 +26,17 @@ function modal(id) {
     var t = this;
     t.m = document.querySelector((id) ? id : '.modal');
     if (t.m) {
-        t.bdy = document.body.classList;
+        t.theBoardy = document.body.classList;
         t.targets = document.querySelectorAll('[data-toggle="' + t.m.id + '"]');
         t.closebtns = t.m.querySelectorAll('.close-modal');
     }
     t.show = function () {
-        t.bdy.add('_overflowhidden');
+        t.theBoardy.add('_overflowhidden');
         t.m.classList.add('_show-modal');
     }
     t.hide = function () {
         t.m.classList.remove('_show-modal');
-        t.bdy.remove('_overflowhidden');
+        t.theBoardy.remove('_overflowhidden');
     }
     t.listeners = function () {
         t.targets.forEach(el => {
@@ -200,17 +200,14 @@ function Tris() {
     ]
     const strikeline = document.querySelector(".strike");
     const root = document.querySelector(':root');
-    const flipCard = document.querySelector('.flip-card');
-    const player1 = document.querySelector(".player1");
-    const player2 = document.querySelector(".player2");
+    const flipCard = document.querySelector('#tris .flip-card');
+    const player1 = document.querySelector("#tris .player1");
+    const player2 = document.querySelector("#tris .player2");
     const winnerShape = document.querySelector('.winner .shape');
     const winORdrawText = document.querySelector(".winner p");
     const cells = document.querySelectorAll(".tris-grid>div");
 
-    var playAgain = () => {
-        clearGrid();
-        flipCard.classList.remove("active");
-    }
+   
     var strikethrough = (index) => {
         switch (index) {
             case 0:
@@ -263,6 +260,10 @@ function Tris() {
                 break;
         }
         strikeline.classList.add("active");
+    } 
+    var playAgain = () => {
+        clearGrid();
+        flipCard.classList.remove("active");
     }
     var resetScore = () => {
         clearGrid();
@@ -290,7 +291,7 @@ function Tris() {
         blockAllbtns();
     }
     var setScale = () => {
-        var playarea = document.querySelector("#tris");
+        var playarea = document.querySelector(".tris-grid");
         if (window.innerWidth < 430) {
             playarea.style.transform = `scale(${window.innerWidth/430})`;
         } else {
@@ -478,145 +479,165 @@ function Tris() {
 }
 
 function ConnectFour() {
-    let w = 7;
-    let h = 6;
-    let bs = 100;
-    let factor = 9 / 10;
-    let player = 1;
-    let finished = 0;
-    let result;
-    let resultP;
-
-    let board = [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0]
-    ];
-
-
-    function setup() {
-        if (resultP == null) {
-            resultP = createP("");
-            resultP.style('font-size', '32pt');
-        }
-
-        createCanvas(700, 600);
-        frameRate(60);
-        ellipseMode(CORNER); //draw circles from their top left point
-
-
-        player = 1;
-        for (y = 0; y < h; y++) {
-            for (x = 0; x < w; x++) {
-                board[y][x] = 0;
-                finished = 0;
-                resultP.html('');
+    var theBoard = [];
+    var c4_table = [];
+    var turn = 1;
+    const flipCard = document.querySelector('#connect4 .flip-card');
+    var htmlTurn = document.getElementById("c4_turn");
+    var c4_elements =document.querySelectorAll("#c4_table>div");
+    console.log(c4_elements)
+    var winner = document.getElementById("c4_winner");
+    var playerOneVictories = 0;
+    var playerTwoVictories = 0;
+    var paused = 0;
+    // Create the JS array for the board
+    function createBoard(rows, columns) {
+        for (var i = 0; i < rows; i++) {
+            theBoard[i] = [];
+            c4_table[i]= [];
+            for (var j = 0; j < columns; j++) {
+                theBoard[i][j] = 0;
+                c4_table[i][j] = c4_elements[j + (columns*i)];
             }
         }
     }
-
-    function p(y, x) {
-        return (y < 0 || x < 0 || y >= h || x >= w) ? 0 : board[y][x];
+    var clearGrid = () => {
+    
+        theBoard = [];
+        c4_table = [];
+        c4_elements.forEach(function (f) {
+            f.removeAttribute("class")
+        });
+        createBoard(6,7);
+        console.log(theBoard)
+    }
+    
+    var playAgain = () => {
+        clearGrid();
+        flipCard.classList.remove("active");
+    }
+    var resetScore = () => {
+        clearGrid();
+        localStorage.setItem("p1Score", 0);
+        localStorage.setItem("p2Score", 0);
+        p1Score = 0;
+        p2Score = 0;
+        changeDivScoreValues();
     }
 
+    createBoard(6, 7);
+    document.querySelector("#connect4 .again").onclick = () => {
+        playAgain()
+    };
+    document.querySelector("#connect4 .clear").onclick = () => {
+        clearGrid()
+    };
+    document.querySelector("#connect4 .reset").onclick = () => {
+        resetScore()
+    };
+    function colorBoard(r,c,t){
+        if(t==2){
+            c4_table[r][c].classList.add("p2-disc");
+        }
+        if(t==1){
+            c4_table[r][c].classList.add("p1-disc");
+        }
+    }
+    function chkLine(a,b,c,d) {
+        // Check first cell non-zero and all cells match
+        return ((a != 0) && (a ==b) && (a == c) && (a == d));
+    }
+    function checkIfWon(p, r,c){
+        if(r<3)//vertical down
+            if(chkLine(theBoard[r][c], theBoard[r+1][c], theBoard[r+2][c], theBoard[r+3][c]))
+                displayWinner(p);
+        else if(r>2)//vertical up
+            if(chkLine(theBoard[r][c], theBoard[r-1][c], theBoard[r-2][c], theBoard[r-3][c]))
+                displayWinner(p);
+        if(c<4)//horizontal right
+            if(chkLine(theBoard[r][c], theBoard[r][c+1], theBoard[r][c+2], theBoard[r][c+3]))
+                displayWinner(p);
+        else if(c>3)//horizontal left
+            if(chkLine(theBoard[r][c], theBoard[r][c-1], theBoard[r][c-2], theBoard[r][c-3]))
+                displayWinner(p);
 
-    function getWinner() { //loops through rows, columns, diagonals, etc for win condition
-
-        for (y = 0; y < h; y++) {
-            for (x = 0; x < w; x++) {
-
-                if (p(y, x) != 0 && p(y, x) == p(y, x + 1) && p(y, x) == p(y, x + 2) && p(y, x) == p(y, x + 3)) {
-                    return p(y, x);
-                }
-
-                if (p(y, x) != 0 && p(y, x) == p(y + 1, x) && p(y, x) == p(y + 2, x) && p(y, x) == p(y + 3, x)) {
-                    return p(y, x);
-                }
-
-                for (d = -1; d <= 1; d += 2) {
-                    if (p(y, x) != 0 && p(y, x) == p(y + 1 * d, x + 1) && p(y, x) == p(y + 2 * d, x + 2) && p(y, x) == p(y + 3 * d, x + 3)) {
-                        return p(y, x);
+        if(r<3 && c<4)//diagonal bottom right
+            if(chkLine(theBoard[r][c], theBoard[r+1][c+1], theBoard[r+2][c+2], theBoard[r+3][c+3]))
+                displayWinner(p);
+        if(r>2 && c<4)
+            if(chkLine(theBoard[r][c], theBoard[r-1][c+1], theBoard[r-2][c+2], theBoard[r-3][c+3]) )
+                displayWinner(p);
+        if(r>3 && c>2)//diagonal top left
+            if(chkLine(theBoard[r][c], theBoard[r-1][c-1], theBoard[r-2][c-2], theBoard[r-3][c-3]))
+                displayWinner(p);
+        if(r>2 && c<4)
+            if(chkLine(theBoard[r][c], theBoard[r-1][c+1], theBoard[r-2][c+2], theBoard[r-3][c+3]) )
+                displayWinner(p);
+    }
+    function pickColumn(column) {
+        if (paused != 1) {
+            var aCol = theBoard.map(function(value,index) { return value[column]; });
+            if (aCol.indexOf(0) == -1) {console.log("Column is full");
+            } else {
+                for (let i = 5; i> -1; i--) {
+                     if (theBoard[i][column] != 1 && theBoard[i][column] != 2) {
+                        theBoard[i][column] = turn;
+                        colorBoard( i,column ,turn);
+                        updatePlayer();
+                        checkIfWon(turn,i,column);
+                        break;
                     }
                 }
-
-            }
-        }
-
-
-        for (y = 0; y < h; y++)
-            for (x = 0; x < w; x++)
-                if (p(y, x) == 0) return 0;
-        return -1; //tie
-    }
-
-    function nextSpace(x) { //finds the next space (from the bottom)
-        for (y = h - 1; y >= 0; y--) {
-            if (board[y][x] == 0) {
-                return y;
-            }
-        }
-        return -1;
-    }
-
-    function mousePressed() {
-
-        if (player == 2) {
-            if (getWinner() == 0) {
-                let x = floor(mouseX / bs),
-                    y = nextSpace(x);
-                if (y >= 0) {
-                    board[y][x] = player;
-                    player = 1;
-                }
+                
             }
         }
     }
-
-
-
-    function draw() {
-
+    var btns = document.querySelectorAll("#c4_columns>div");
+    for (let index = 0; index < btns.length; index++) {
+        const element = btns[index];
+        element.addEventListener("click", () => {
+            pickColumn(index);
+        });
+        
+    }
+   
+    // Swap turns
+    function updatePlayer() {
+        if (turn == 1) {
+            htmlTurn.innerHTML = "Player 2 Turn";
+            htmlTurn.style.background="var(--yellow)";
+            turn = 2;
+        } else if (turn == 2) {
+            htmlTurn.innerHTML = "Player 1 Turn";
+            htmlTurn.style.background="var(--red)";
+            turn = 1;
+        }
+    }
+    // Clear the board and unpause the game
+    function reset() {
+        paused = 0;
+        theBoard = [];
+        createBoard(7, 6);
+        maintainBoard();
+        winner.innerHTML = "";
+    }
+    // Tell the winner they're awesome and pause the game
+    function displayWinner(player) {
+        flipCard.classList.add("active");
         if (player == 1) {
-            result = bestMove();
-
-            board[nextSpace(result)][result] = 1;
+            playerOneVictories += 1;
+            document.getElementById(
+                "playerOneVictories"
+            ).innerHTML = playerOneVictories;
+            winner.innerHTML = "Player One Wins! Press Reset to play again.";
+        } else {
+            playerTwoVictories += 1;
+            document.getElementById(
+                "playerTwoVictories"
+            ).innerHTML = playerTwoVictories;
+            winner.innerHTML = "Player Two Wins! Press Reset to play again.";
         }
-
-        for (j = 0; j < h; j++)
-            for (i = 0; i < w; i++) {
-                fill(255);
-                rect(i * bs, j * bs, bs, bs);
-                if (board[j][i] > 0) {
-                    fill(board[j][i] == 1 ? 255 : 0, board[j][i] == 2 ? 255 : 0, 0);
-                    ellipse(i * bs + (1 - factor) / 2 * bs, j * bs + (1 - factor) / 2 * bs, bs * factor, bs * factor);
-                }
-            }
-
-        if (getWinner() != 0 && finished == 0) {
-
-            let result = getWinner();
-            let text;
-
-            if (result == -1) {
-                text = 'You tied the AI!';
-            } else {
-                text = `${result == 1 ? "The AI": "You"} won. `;
-            }
-
-            text += " Press space to retry!";
-            resultP.html(text);
-            finished = 1;
-        }
-    }
-
-    function keyPressed() {
-
-        if (getWinner() != 0 && key == " ") {
-            setup();
-        }
+        paused = 1;
     }
 }
 document.addEventListener("DOMContentLoaded", () => {
@@ -627,4 +648,5 @@ document.addEventListener("DOMContentLoaded", () => {
     new modal("#mdl0");
     new pagesRoute();
     new Tris();
+    new ConnectFour();
 });

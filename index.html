@@ -27,7 +27,8 @@
             </header>
             <hr>
             <div>
-                <div id="notification">A new version of this app is available. <br>Click <a id="reload">here</a> to update.</div>
+                <div id="notification">A new version of this app is available. <br>Click <a id="reload">here</a> to
+                    update.</div>
             </div>
             <hr>
             <footer>
@@ -43,6 +44,16 @@
                 &nbsp;Let's Play
             </a>
             <ul>
+                <li>
+                    <a topage="#home">
+                        <svg class="_icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z">
+                            </path>
+                        </svg>
+                        &nbsp; Home
+                    </a>
+                </li>
                 <li><a href="https://d3ward.github.io/" target="_blank">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="1.4rem" viewbox="0 0 70 50">
                             <path
@@ -93,14 +104,14 @@
         <div class="pages">
             <section id="home" class="page-active _aos-top">
                 <div class="grid">
-                    <div class="col-6" topage="#tris">
-                        <div class="card">
+                    <div class="col-6">
+                        <div class="card" topage="#tris">
                             <img src="./src/svg/tris_p.svg" alt="" class="full">
                             <h3>Tic Tac Toe</h3>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card">
+                        <div class="card" topage="#connect4">
                             <img src="" alt="">
                             <h3>Forza 4</h3>
                         </div>
@@ -108,8 +119,7 @@
                 </div>
             </section>
             <section id="tris" class="_aos-top">
-                <button topage="#home"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg> Back to home</button>
-                <h1>Tic Tac Toe</h1>
+                <h2>Tic Tac Toe</h2>
                 <div class="flip-card">
                     <div class="tris-grid">
                         <div>
@@ -173,12 +183,71 @@
                         <button class="reset">Reset Score</button>
                     </div>
                 </div>
+                <button topage="#home"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg> Back to home</button>
 
+            </section>
+            <section id="connect4" class="_aos-top">
+                <h3>Connect 4</h3>
+                <div class="flip-card">
+                    <div class="c4-grid">
+                        <p id="c4_turn">Player 1 Turn</p>
+                        <div style="position: relative;">
+                             <div id="c4_table">
+                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                             </div>
+                            <div id="c4_columns" class="row">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="strike"></div>
+                    <div class="winner">
+                        <p>Winner!</p>
+                        <div id="c4_winner"></div>
+                        <div class="shape _pu"></div>
+                        <button class="again">Play again</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="card">
+                    <div class="row keep-width">
+                        <div>
+                            <h4> Player 1: <span id="playerOneVictories">0 </span></h4>
+                        </div>
+                        <div>
+                            <h4> Player 2: <span id="playerTwoVictories">0 </span> </h4>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="clear">Clear Grid</button>
+                        <button class="reset">Reset Score</button>
+                    </div>
+                </div>
+                <button topage="#home"><svg class="_icon" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg> Back to home</button>
+
+            </section>
         </div>
-
-        </section>
-        </div>
-
     </main>
     <script src="confetti.browser.min.js"></script>
     <script src="script.js"></script>
