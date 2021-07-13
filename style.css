@@ -778,12 +778,20 @@ button>svg,
   margin: 0 -1rem -1rem -1rem;
 }
 
+/* ----------------- Sections ----------------- */
 #home .card:hover {
   transform: translateY(10px);
 }
 
+#tris,#connect4 {
+  max-width: 380px;
+  margin: auto;
+}
 
-#tris .tris-grid,
+
+
+
+#tris .tris_grid,
 #connect4 .c4-grid,
 .winner {
   position: absolute;
@@ -791,28 +799,34 @@ button>svg,
   height: 100%;
   backface-visibility: hidden;
 }
-#tris {
-  max-width: 380px;
-  margin: auto;
-}
-#tris .tris-grid {
+
+#tris .tris_table {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   grid-gap: 10px;
 }
+#tris .tris_table>div {
+  background: var(--bg3);
+  border-radius: 10px;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 
 #c4_columns {
   margin: 0;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    gap: 10px;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  gap: 10px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 }
-
 #c4_columns>div {
   height: 350px;
 }
@@ -829,15 +843,11 @@ button>svg,
   transform: rotateY(-180deg);
 }
 
-#tris .flip-card {
-  max-width: 300px;
-  height: 300px;
-}
-
-#connect4 .flip-card {
+#tris .flip-card,#connect4 .flip-card {
   max-width: 380px;
   height: 400px;
 }
+
 
 .winner {
   background-color: var(--bg3);
@@ -860,14 +870,7 @@ button>svg,
   height: 55px;
 }
 
-#tris .tris-grid>div {
-  background: var(--bg3);
-  border-radius: 10px;
-  aspect-ratio: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 
 #tris .cross,
 #tris .circle {
@@ -933,22 +936,14 @@ button>svg,
 }
 
 
-#reset {
-  font-size: 18px;
-  border-radius: 0px;
-  width: 100px;
-  margin: 0px;
-  padding: 0px;
-  height: 30px;
-}
 
 /* Turn  Header */
-
-#c4_turn {
+#c4_turn,
+#tris_turn {
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
-  background: var(--blue);
+  background: var(--red);
   color: var(--txt-r);
   border-radius: var(--radius);
   padding: .5rem;
@@ -959,7 +954,8 @@ button>svg,
   position: relative;
   background: var(--bg3);
 }
-#c4_table>div::after{
+
+#c4_table>div::after {
   position: absolute;
   top: 0;
   left: 0;
@@ -970,25 +966,26 @@ button>svg,
   transform: scale(0);
   transition: all 0.2s ease;
 }
+
 .p1-disc::after {
-  transform: scale(1)!important;
+  transform: scale(1) !important;
   background: var(--red) !important;
 }
 
 .p2-disc::after {
-  transform: scale(1)!important;
+  transform: scale(1) !important;
   background: var(--yellow) !important;
 }
 
 #c4_table {
   display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    grid-gap: 10px;
-    border-bottom: 10px solid var(--blue);
-    padding: 10px;
-    width: 100%;
-    height: 100%;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-gap: 10px;
+  border-bottom: 10px solid var(--blue);
+  padding: 10px;
+  width: 100%;
+  height: 100%;
 }
 
 #c4_table>div {
@@ -1009,7 +1006,8 @@ button>svg,
   width: 1.3rem;
   fill: currentColor;
 }
-._2-col{
+
+._2-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }

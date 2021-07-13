@@ -178,8 +178,17 @@ function pagesRoute() {
     }
 }
 
+var setScale = (el) => {
+    if (window.innerWidth < 430) {
+        el.style.transform = `scale(${window.innerWidth/430})`;
+    } else {
+        el.style.transform = "scale(1)";
+    }
+}
+
+
 function Tris() {
-    var origBoard;
+    var board;
     //localStorage.setItem("p1Score", 0);
     //   localStorage.setItem("p2Score", 0);
     var p1Score = 0;
@@ -204,8 +213,8 @@ function Tris() {
     const player2 = document.querySelector("#tris .player2");
     const winnerShape = document.querySelector('.winner .shape');
     const winORdrawText = document.querySelector(".winner p");
-    const cells = document.querySelectorAll(".tris-grid>div");
-
+    const cells = document.querySelectorAll(".tris_table>div");
+    const tris_grid = document.querySelector(".tris_grid");
    
     var strikethrough = (index) => {
         switch (index) {
@@ -289,23 +298,15 @@ function Tris() {
         localStorage.setItem("p2Score", p2Score);
         blockAllbtns();
     }
-    var setScale = () => {
-        var playarea = document.querySelector(".tris-grid");
-        if (window.innerWidth < 430) {
-            playarea.style.transform = `scale(${window.innerWidth/430})`;
-        } else {
-            playarea.style.transform = "scale(1)";
-        }
-        console.log(playarea.style.transform);
-    }
+    
     var startGame = () => {
-        origBoard = Array.from(Array(9).keys());
+        board = Array.from(Array(9).keys());
         if (p1Score == null && p2Score == null) {
             p1Score = 0;
             p2Score = 0;
         }
         changeDivScoreValues();
-        setScale();
+        setScale(tris_grid);
         cells.forEach(function (el, index) {
             el.addEventListener("click", () => {
                 turnClick(index);
@@ -324,14 +325,14 @@ function Tris() {
 
     var turnClick = (index) => {
         turn(index, huPlayer);
-        if (!checkWin(origBoard, huPlayer) && !checkTie()) turn(bestSpot(), aiPlayer);
+        if (!checkWin(board, huPlayer) && !checkTie()) turn(bestSpot(), aiPlayer);
     }
 
     var turn = (pos, player) => {
-        origBoard[pos] = player;
+        board[pos] = player;
         cells[pos].querySelector(player == "O" ? '.circle' : '.cross').classList.add("active")
         cells[pos].style.pointerEvents = 'none';
-        let gameWon = checkWin(origBoard, player);
+        let gameWon = checkWin(board, player);
         if (gameWon) gameOver(gameWon);
     }
 
@@ -359,7 +360,7 @@ function Tris() {
         });
     }
     var clearGrid = () => {
-        origBoard = Array.from(Array(9).keys());
+        board = Array.from(Array(9).keys());
         cells.forEach(function (f) {
             f.style.pointerEvents = 'auto';
             f.querySelector('.cross').classList.remove("active");
@@ -407,11 +408,11 @@ function Tris() {
     }
 
     var emptySquares = () => {
-        return origBoard.filter(s => typeof s == 'number');
+        return board.filter(s => typeof s == 'number');
     }
 
     var bestSpot = () => {
-        return minimax(origBoard, aiPlayer).index;
+        return minimax(board, aiPlayer).index;
     }
 
     var checkTie = () => {
