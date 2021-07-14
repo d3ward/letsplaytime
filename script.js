@@ -157,6 +157,8 @@ function pagesRoute() {
         if (nextLink) nextLink.classList.add("active");
         //Scroll to top
         t.scrollTop();
+        if(reverse==true)
+        interval = setInterval(()=>{clear("#"+activePage.id,id)}, 100);
         //Set history state
         if (history.pushState)
             history.pushState(null, null, id);
@@ -177,6 +179,40 @@ function pagesRoute() {
         t.listeners();
     }
 }
+
+let text = {
+    '#home':"Let's Play ! ",
+    '#tris':"Tic Tac Toe", 
+    '#connect4':"Connect Four"};
+
+let i = 0;
+let j = -1;
+let reverse = true;
+window.location.hash
+let interval; 
+if(!window.location.hash)
+    interval= setInterval(()=>{type("#home")}, 100);
+function type(u) {
+    let nowText = text[u];
+    document.getElementById("typewriter").innerText = nowText.substr(0, j);
+    if (j > nowText.length ) {
+        clearInterval(interval);
+        reverse=true;
+    }
+    j +=  1;
+}
+function clear(u,z){
+    let nowText = text[u];
+    console.log(j);
+    document.getElementById("typewriter").innerText = nowText.substr(0, j);
+    if (j <0) {
+        clearInterval(interval);
+        reverse=false;
+        interval = setInterval(()=>(type(z)), 150);
+    }
+    j -= 1 ;
+}
+
 
 var setScale = (el) => {
     if (window.innerWidth < 430) {
