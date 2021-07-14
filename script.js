@@ -157,8 +157,8 @@ function pagesRoute() {
         if (nextLink) nextLink.classList.add("active");
         //Scroll to top
         t.scrollTop();
-        if(reverse==true)
-        interval = setInterval(()=>{clear("#"+activePage.id,id)}, 100);
+        clearInterval(interval);
+        interval = setInterval(()=>{clear("#"+activePage.id,id)}, 50);
         //Set history state
         if (history.pushState)
             history.pushState(null, null, id);
@@ -197,7 +197,6 @@ function type(u) {
     document.getElementById("typewriter").innerText = nowText.substr(0, j);
     if (j > nowText.length ) {
         clearInterval(interval);
-        reverse=true;
     }
     j +=  1;
 }
@@ -207,7 +206,6 @@ function clear(u,z){
     document.getElementById("typewriter").innerText = nowText.substr(0, j);
     if (j <0) {
         clearInterval(interval);
-        reverse=false;
         interval = setInterval(()=>(type(z)), 150);
     }
     j -= 1 ;
