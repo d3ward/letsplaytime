@@ -155,6 +155,12 @@
                             <h3>Forza 4</h3>
                         </div>
                     </div>
+                    <div class="col-6">
+                        <div class="card" topage="#memory">
+                            <img src="./src/svg/c4_p.svg" alt="" class="full">
+                            <h3>Memory Tiles</h3>
+                        </div>
+                    </div>
                 </div>
             </section>
             <section id="tris" class="_aos-top">
@@ -242,6 +248,7 @@
                 <div class="_2-col score">
                     <div>
                         <div class="p1-disc"></div>
+
                         <p class="player1_score"></p>
                     </div>
                     <div>
@@ -332,6 +339,32 @@
                         </svg> &nbsp; Clear</button>
                     <button class="reset">Reset Score</button>
                 </div>
+            </section>
+            <section id="memory" class="_aos-top">
+                <div id="score-panel">
+                    <ul class="stars">
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                    </ul>
+                    <span class="moves">0</span> Moves
+                    <div class="restart">
+                        <i class="fa fa-repeat"></i>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="memory_grid">
+                        <p id="memory_turn">Player 1 Turn</p>
+                            <div class="memory_table">
+                            </div>
+                    </div>
+                    <div class="winner">
+                        <p>Winner!</p>
+                        <div class="shape _pu"></div>
+                        <button class="again">Play again</button>
+                    </div>
+                </div>
+                
             </section>
         </div>
     </main>
