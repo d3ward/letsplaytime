@@ -202,7 +202,6 @@ function type(u) {
 }
 function clear(u,z){
     let nowText = text[u];
-    console.log(j);
     document.getElementById("typewriter").innerText = nowText.substr(0, j);
     if (j <0) {
         clearInterval(interval);
@@ -219,17 +218,39 @@ var setScale = (el) => {
         el.style.transform = "scale(1)";
     }
 }
-
-
+var triggerConfetti = () => {
+    confetti({
+        particleCount: 150,
+        origin: {
+            y: 0.8
+        }
+    });
+}
+ // Swap turns
+ var updateTurnLabel=(el,txt,color)=> {
+    el.innerText = txt;
+    el.style.background=color;
+}
+const updateScoreLabels = (p1,p2,s1,s2) => {
+    p1.innerText = s1;
+    p2.innerText = s2;
+}
 function Tris() {
     var board;
-    //localStorage.setItem("p1Score", 0);
-    //   localStorage.setItem("p2Score", 0);
-    var p1Score = 0;
-    var p2Score = 0;
+    var p1_score = localStorage.getItem("tris_p1");
+    var p2_score = localStorage.getItem("tris_p2");
+    if(p1_score == undefined){
+        p1_score=0;
+        p2_score=0;
+    }
+    const p1_label_score = document.querySelector("#tris .player1_score");
+    const p2_label_score= document.querySelector("#tris .player2_score");
+    updateScoreLabels(p1_label_score,p2_label_score,p1_score,p2_score);
+    
+    var paused=false;
     const vsAI = true;
-    const huPlayer = 'X';
-    const aiPlayer = 'O';
+    const p1_sign = 'X';
+    const p2_sign = 'O';
     const winCombos = [
         [0, 1, 2],
         [3, 4, 5],
@@ -240,11 +261,11 @@ function Tris() {
         [0, 4, 8],
         [6, 4, 2]
     ]
+    const tris_turn = document.getElementById("tris_turn");
     const strikeline = document.querySelector(".strike");
     const root = document.querySelector(':root');
     const flipCard = document.querySelector('#tris .flip-card');
-    const player1 = document.querySelector("#tris .player1");
-    const player2 = document.querySelector("#tris .player2");
+    
     const winnerShape = document.querySelector('.winner .shape');
     const winORdrawText = document.querySelector(".winner p");
     const cells = document.querySelectorAll(".tris_table>div");
@@ -309,41 +330,29 @@ function Tris() {
     }
     var resetScore = () => {
         clearGrid();
-        localStorage.setItem("p1Score", 0);
-        localStorage.setItem("p2Score", 0);
-        p1Score = 0;
-        p2Score = 0;
-        changeDivScoreValues();
+        localStorage.setItem("tris_p1", 0);
+        localStorage.setItem("tris_p2", 0);
+        p1_score = 0;
+        p2_score = 0;
+        updateScoreLabels(p1_label_score,p2_label_score,p1_score,p2_score);
     }
-    var changeDivScoreValues = () => {
-        player1.innerHTML = p1Score;
-        player2.innerHTML = p2Score;
-    }
+    
     var blockAllbtns = () => {
         cells.forEach(function (e) {
             e.style.pointerEvents = 'none';
         })
     }
 
-    var updateScore = (player) => {
-        winORdrawText.innerHTML = "Winner!";
-        player == huPlayer ? player1.innerHTML = p1Score : player2.innerHTML = p2Score;
-        localStorage.setItem("p1Score", p1Score);
-        localStorage.setItem("p2Score", p2Score);
-        blockAllbtns();
-    }
+  
     
     var startGame = () => {
         board = Array.from(Array(9).keys());
-        if (p1Score == null && p2Score == null) {
-            p1Score = 0;
-            p2Score = 0;
-        }
-        changeDivScoreValues();
+      
         setScale(tris_grid);
         cells.forEach(function (el, index) {
             el.addEventListener("click", () => {
-                turnClick(index);
+                if(!paused)
+                    turnClick(index);
             })
         });
         document.querySelector("#tris .again").onclick = () => {
@@ -356,10 +365,24 @@ function Tris() {
             resetScore()
         };
     }
-
+   
     var turnClick = (index) => {
-        turn(index, huPlayer);
-        if (!checkWin(board, huPlayer) && !checkTie()) turn(bestSpot(), aiPlayer);
+        turn(index, p1_sign);
+        updateTurnLabel(tris_turn,"AI turn","var(--red)");
+        paused=true;
+        setTimeout(() => {
+            if (!checkWin(board, p1_sign) && !checkTie())
+            {
+                turn(bestSpot(), p2_sign);
+               
+                setTimeout(() => {
+                    updateTurnLabel(tris_turn,"Player 1 turn","var(--blue)");
+                    paused=false; 
+                }, 1000);
+               
+            } 
+        }, 400);
+        
     }
 
     var turn = (pos, player) => {
@@ -385,14 +408,7 @@ function Tris() {
         }
         return gameWon;
     }
-    var triggerConfetti = () => {
-        confetti({
-            particleCount: 150,
-            origin: {
-                y: 0.8
-            }
-        });
-    }
+    
     var clearGrid = () => {
         board = Array.from(Array(9).keys());
         cells.forEach(function (f) {
@@ -401,12 +417,12 @@ function Tris() {
             f.querySelector('.circle').classList.remove("active");
         });
         strikeline.classList.remove("active");
+        updateTurnLabel(tris_turn,"Player 1 turn","var(--blue)");
     }
     var gameOver = (gameWon) => {
-        updateScore(gameWon.player);
         strikethrough(gameWon.index);
         triggerConfetti();
-        declareWinner(gameWon.player == huPlayer ? 1 : 2);
+        declareWinner(gameWon.player == p1_sign ? 1 : 2);
     }
 
     var declareWinner = (w) => {
@@ -420,25 +436,28 @@ function Tris() {
             }, 400);
         } else if (w == 1) {
             setTimeout(function () {
-                p1Score++;
+                p1_score++;
                 blockAllbtns()
                 strikeline.classList.remove("active");
                 winnerShape.classList.remove("circle");
                 winnerShape.classList.add("cross");
                 flipCard.classList.add("active");
                 clearGrid();
+                updateScoreLabels(p1_label_score,p2_label_score,p1_score,p2_score);
             }, 700);
         } else if (w == 2) {
             setTimeout(function () {
-                p2Score++;
+                p2_score++;
                 blockAllbtns()
                 strikeline.classList.remove("active");
                 winnerShape.classList.remove("cross");
                 winnerShape.classList.add("circle");
                 flipCard.classList.add("active");
                 clearGrid();
+                updateScoreLabels(p1_label_score,p2_label_score,p1_score,p2_score);
             }, 700);
         }
+        
     }
 
     var emptySquares = () => {
@@ -446,7 +465,7 @@ function Tris() {
     }
 
     var bestSpot = () => {
-        return minimax(board, aiPlayer).index;
+        return minimax(board, p2_sign).index;
     }
 
     var checkTie = () => {
@@ -459,11 +478,11 @@ function Tris() {
 
     var minimax = (newBoard, player) => {
         var availSpots = emptySquares();
-        if (checkWin(newBoard, huPlayer)) {
+        if (checkWin(newBoard, p1_sign)) {
             return {
                 score: -10
             };
-        } else if (checkWin(newBoard, aiPlayer)) {
+        } else if (checkWin(newBoard, p2_sign)) {
             return {
                 score: 10
             };
@@ -477,18 +496,18 @@ function Tris() {
             var move = {};
             move.index = newBoard[availSpots[i]];
             newBoard[availSpots[i]] = player;
-            if (player == aiPlayer) {
-                var result = minimax(newBoard, huPlayer);
+            if (player == p2_sign) {
+                var result = minimax(newBoard, p1_sign);
                 move.score = result.score;
             } else {
-                var result = minimax(newBoard, aiPlayer);
+                var result = minimax(newBoard, p2_sign);
                 move.score = result.score;
             }
             newBoard[availSpots[i]] = move.index;
             moves.push(move);
         }
         var bestMove;
-        if (player === aiPlayer) {
+        if (player === p2_sign) {
             var bestScore = -10000;
             for (var i = 0; i < moves.length; i++) {
                 if (moves[i].score > bestScore) {
@@ -516,14 +535,19 @@ function ConnectFour() {
     var c4_board = [];
     var c4_table = [];
     var turn = 1;
+    var p1_score = localStorage.getItem("c4_p1");
+    var p2_score = localStorage.getItem("c4_p2");
+    if(p1_score == undefined){
+        p1_score=0;
+        p2_score=0;
+    }
     const flipCard = document.querySelector('#connect4 .flip-card');
     var c4_turn = document.getElementById("c4_turn");
     var c4_elements =document.querySelectorAll("#c4_table>div");
     var c4_columns =document.querySelectorAll("#c4_columns>div");
-    console.log(c4_elements)
     var winner = document.getElementById("c4_winner");
-    var playerOneVictories = 0;
-    var playerTwoVictories = 0;
+    const p1_label_score = document.querySelector("#connect4 .player1_score");
+    const p2_label_score = document.querySelector("#connect4 .player2_score");
     var paused = 0;
     // Create the JS array for the board
     function createBoard(r, c) {
@@ -549,6 +573,7 @@ function ConnectFour() {
             f.removeAttribute("class");
         });
         createBoard(6,7);
+        updateTurnLabel(c4_turn,"Player 1 turn","var(--red)");
     }
     
     var playAgain = () => {
@@ -557,11 +582,11 @@ function ConnectFour() {
     }
     var resetScore = () => {
         clearGrid();
-        localStorage.setItem("p1Score", 0);
-        localStorage.setItem("p2Score", 0);
-        p1Score = 0;
-        p2Score = 0;
-        changeDivScoreValues();
+        localStorage.setItem("c4_p1", 0);
+        localStorage.setItem("c4_p2", 0);
+        p1_score = 0;
+        p2_score = 0;
+        updateScoreLabels(p1_label_score,p2_label_score,p1_score,p2_score);
     }
 
     createBoard(6, 7);
@@ -582,8 +607,8 @@ function ConnectFour() {
             c4_table[r][c].classList.add("p1-disc");
         }
     }
+    // Check first cell non-zero and all cells match
     function chkLine(a,b,c,d) {
-        // Check first cell non-zero and all cells match
         return ((a != 0) && (a ==b) && (a == c) && (a == d));
     }
     function checkIfWon(p, r,c){
@@ -599,7 +624,6 @@ function ConnectFour() {
         else if(c>3)//horizontal left
             if(chkLine(c4_board[r][c], c4_board[r][c-1], c4_board[r][c-2], c4_board[r][c-3]))
                 displayWinner(p);
-
         if(r<3 && c<4)//diagonal bottom right
             if(chkLine(c4_board[r][c], c4_board[r+1][c+1], c4_board[r+2][c+2], c4_board[r+3][c+3]))
                 displayWinner(p);
@@ -622,7 +646,8 @@ function ConnectFour() {
                      if (c4_board[i][column] != 1 && c4_board[i][column] != 2) {
                         c4_board[i][column] = turn;
                         colorBoard( i,column ,turn);
-                        updatePlayer();
+                        if(turn==1)turn=2;else turn=1;
+                        updateTurnLabel(c4_turn,"Player "+turn+" turn",(turn==1)?"var(--red)":"var(--yellow)");
                         checkIfWon(turn,i,column);
                         break;
                     }
@@ -633,18 +658,6 @@ function ConnectFour() {
     }
    
    
-    // Swap turns
-    function updatePlayer() {
-        if (turn == 1) {
-            c4_turn.innerHTML = "Player 2 Turn";
-            c4_turn.style.background="var(--yellow)";
-            turn = 2;
-        } else if (turn == 2) {
-            c4_turn.innerHTML = "Player 1 Turn";
-            c4_turn.style.background="var(--red)";
-            turn = 1;
-        }
-    }
     // Clear the board and unpause the game
     function reset() {
         paused = 0;
@@ -657,19 +670,15 @@ function ConnectFour() {
     function displayWinner(player) {
         flipCard.classList.add("active");
         if (player == 1) {
-            playerOneVictories += 1;
-            document.getElementById(
-                "playerOneVictories"
-            ).innerHTML = playerOneVictories;
+            p1_score+= 1;
             winner.innerHTML = "Player One Wins! Press Reset to play again.";
         } else {
-            playerTwoVictories += 1;
-            document.getElementById(
-                "playerTwoVictories"
-            ).innerHTML = playerTwoVictories;
+            p2_score += 1;
             winner.innerHTML = "Player Two Wins! Press Reset to play again.";
         }
+        updateScoreLabels(p1_label_score,p2_label_score,p1_score,p2_score);
         paused = 1;
+        triggerConfetti();
     }
 }
 document.addEventListener("DOMContentLoaded", () => {

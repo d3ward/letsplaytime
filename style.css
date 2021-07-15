@@ -789,7 +789,10 @@ button>svg,
 }
 
 
-
+.player1_score,.player2_score{
+  font-size: 2rem;
+  margin: 0;
+}
 
 #tris .tris_grid,
 #connect4 .c4-grid,
@@ -918,7 +921,7 @@ button>svg,
 #tris .score .cross,
 #tris .score .circle {
   position: static;
-  transform: scale(0.8);
+  transform: scale(0.6);
 }
 
 #tris .strike {
@@ -947,6 +950,9 @@ button>svg,
   color: var(--txt-r);
   border-radius: var(--radius);
   padding: .5rem;
+}
+#tris_turn{
+  background: var(--blue);
 }
 
 /* Connect 4 table */
