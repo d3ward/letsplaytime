@@ -798,33 +798,34 @@ function memory() {
     // Card flip
     function openCard(d) {
         d.classList.add("open");
-        var card =d.innerText;
+        var card =d.innerHTML;
         opened.push(card);
-        console.log("opened card")
         // Compare with opened card
         if (opened.length > 1) {
-            if (card === opened[0]) {
-
-                deck.find('.open').addClass('match animated infinite rubberBand');
-                setTimeout(function () {
-                    deck.find('.match').removeClass('open show animated infinite rubberBand');
-                }, delay);
+            if (card == opened[0]) {
+                document.querySelectorAll(".memory_table>div.open").forEach(element => {
+                    element.classList.add('match');
+                    element.classList.add('show');
+                        element.classList.remove('open');
+                    
+                });
                 match++;
             } else {
-                deck.find('.open').addClass('notmatch animated infinite wobble');
-                setTimeout(function () {
-                    deck.find('.open').removeClass('animated infinite wobble');
-                }, delay / 1.5);
-                setTimeout(function () {
-                    deck.find('.open').removeClass('open show notmatch animated infinite wobble');
-                }, delay);
+                document.querySelectorAll(".memory_table>div.open").forEach(element => {
+                    element.classList.add('nomatch');
+                    setTimeout(() => {
+                        element.classList.remove('nomatch'); 
+                        element.classList.remove('open');
+                    }, 1200);
+                    
+                });
             }
             opened = [];
             moves++;
-            setRating(moves);
-            moveNum.html(moves);
+            //setRating(moves);
+            //moveNum.html(moves);
         }
-
+        /*
         // End Game if match all cards
         if (gameCardsQTY === match) {
             setRating(moves);
@@ -832,7 +833,7 @@ function memory() {
             setTimeout(function () {
                 endGame(moves, score);
             }, 500);
-        }
+        }*/
     }
    // Initial Game
    function initGame() {
@@ -847,7 +848,7 @@ function memory() {
     for (var i = 0; i < cards.length; i++) {
         var d= document.createElement("div");
         
-        d.innerHTML="<span>"+cards[i]+"</span>";
+        d.innerHTML="<span></span><span>"+cards[i]+"</span>";
         
         deck.appendChild(d);
     }
