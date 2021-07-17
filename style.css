@@ -783,7 +783,7 @@ button>svg,
   transform: translateY(10px);
 }
 
-#tris,#connect4 {
+#tris,#connect4,#memory {
   max-width: 380px;
   margin: auto;
 }
@@ -796,6 +796,7 @@ button>svg,
 
 #tris .tris_grid,
 #connect4 .c4-grid,
+#memory .memory-grid,
 .winner {
   position: absolute;
   width: 100%;
@@ -846,7 +847,7 @@ button>svg,
   transform: rotateY(-180deg);
 }
 
-#tris .flip-card,#connect4 .flip-card {
+#tris .flip-card,#connect4 .flip-card ,#memory .flip-card{
   max-width: 380px;
   height: 400px;
 }
@@ -942,7 +943,7 @@ button>svg,
 
 /* Turn  Header */
 #c4_turn,
-#tris_turn {
+#tris_turn,#memory_bar {
   font-size: 22px;
   margin: 0;
   margin-bottom: 10px;
@@ -1005,14 +1006,11 @@ button>svg,
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
   grid-gap: 10px;
-  border-bottom: 10px solid var(--blue);
-  padding: 10px;
   width: 100%;
-  height: 100%;
 }
 .memory_table>div{
   position: relative;
-  
+  transform-style: preserve-3d;
   aspect-ratio: 1;
   transition: transform 0.3s ease;
   cursor: pointer;
@@ -1037,20 +1035,25 @@ button>svg,
   background-color: var(--bg3);
 }
 .memory_table>div span:nth-child(2){
-  background-color: #525B6B;
+  background-color: var(--bg3);
   transform: rotateY(180deg);
+}
+.memory_table>div.open,.memory_table>div.show {
+  pointer-events: none;
 }
 .memory_table>div.open span:nth-child(1),.memory_table>div.show span:nth-child(1){
   transform: rotateY(-180deg);
+  background-color: transparent;
 }
 .memory_table>div.open span:nth-child(2),.memory_table>div.show span:nth-child(2){
   transform: rotateY(0);
-  background: #89C4FF;
+  background: var(--blue);
   cursor: default;
+  
 }
 
 .memory_table>div.match span:nth-child(2) {
-  background: #9BCB3C;
+  background: var(--green);
   -webkit-animation: jello-horizontal 1s both;
 	animation: jello-horizontal 1s both;
 }
@@ -1118,7 +1121,7 @@ button>svg,
 
 
 .memory_table>div.nomatch span:nth-child(2) {
-  background: #EE0E51;
+  background: var(--red);
   -webkit-animation: wobble-hor-bottom 1s both;
 	        animation: wobble-hor-bottom 1s both;
 }

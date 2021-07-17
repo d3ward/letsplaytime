@@ -710,24 +710,19 @@ function memory() {
         '<svg  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
         '<svg  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>',
         '<svg  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>'
-    ],
-        opened = [],
+    ];
+    var opened = [],
         match = 0,
         moves = 0,
         deck = document.querySelector('#memory .memory_table'),
-        boxes = document.querySelectorAll('#memory .memory_table>div'),
-        scorePanel = document.querySelector('#score-panel'),
-        moveNum = document.querySelector('#memory .moves'),
+        moveNum = document.querySelector('#memory #memory_bar'),
         ratingStars = document.querySelector('#memory .stars>*'),
         restart = document.querySelector('#memory .restart'),
-        delay = 800,
-        gameCardsQTY = symbols.length / 2,
-        rank3stars = gameCardsQTY + 2,
-        rank2stars = gameCardsQTY + 6,
-        rank1stars = gameCardsQTY + 10;
+        matchesToWin = 8;
+        const flipCard = document.querySelector('#memory .flip-card');
 
     // Shuffle function 
-    function shuffle(array) {
+    var shuffle=(array)=>{
         var currentIndex = array.length,
             temporaryValue, randomIndex;
         while (0 !== currentIndex) {
@@ -740,63 +735,7 @@ function memory() {
         return array;
     }
 
- 
-
-    // Set Rating and final Score
-    function setRating(moves) {
-        var rating = 3;
-        if (moves > rank3stars && moves < rank2stars) {
-            ratingStars.eq(2).removeClass('fa-star').addClass('fa-star-o');
-            rating = 2;
-        } else if (moves > rank2stars && moves < rank1stars) {
-            ratingStars.eq(1).removeClass('fa-star').addClass('fa-star-o');
-            rating = 1;
-        } else if (moves > rank1stars) {
-            ratingStars.eq(0).removeClass('fa-star').addClass('fa-star-o');
-            rating = 0;
-        }
-        return {
-            score: rating
-        };
-    };
-
-    // End Game
-    function endGame(moves, score) {
-        swal({
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-            title: 'Congratulations! You Won!',
-            text: 'With ' + moves + ' Moves and ' + score + ' Stars.\nBoom Shaka Lak!',
-            type: 'success',
-            confirmButtonColor: '#9BCB3C',
-            confirmButtonText: 'Play again!'
-        }).then(function (isConfirm) {
-            if (isConfirm) {
-                initGame();
-            }
-        })
-    }
-
-    // Restart Game
-    restart.addEventListener('click', function () {
-        swal({
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-            title: 'Are you sure?',
-            text: "Your progress will be Lost!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#9BCB3C',
-            cancelButtonColor: '#EE0E51',
-            confirmButtonText: 'Yes, Restart Game!'
-        }).then(function (isConfirm) {
-            if (isConfirm) {
-                initGame();
-            }
-        })
-    });
-    // Card flip
-    function openCard(d) {
+    var openCard=(d)=> {
         d.classList.add("open");
         var card =d.innerHTML;
         opened.push(card);
@@ -820,45 +759,40 @@ function memory() {
                     
                 });
             }
-            opened = [];
+            setTimeout(() => {
+                opened = [];
+            }, 1000);
             moves++;
-            //setRating(moves);
-            //moveNum.html(moves);
+            moveNum.innerText= moves;
         }
-        /*
-        // End Game if match all cards
-        if (gameCardsQTY === match) {
-            setRating(moves);
-            var score = setRating(moves).score;
-            setTimeout(function () {
-                endGame(moves, score);
-            }, 500);
-        }*/
+        if (matchesToWin === match) {
+            flipCard.classList.add("active");
+        }
     }
    // Initial Game
-   function initGame() {
-    var cards = shuffle(symbols.concat(symbols));
-    while(deck.firstChild)
-        deck.removeChild(deck.firstChild);
-    match = 0;
-    moves = 0;
-    moveNum.innerHTML= moves;
-    ratingStars.classList.remove('fa-star-o');
-    ratingStars.classList.add('fa-star');
-    for (var i = 0; i < cards.length; i++) {
-        var d= document.createElement("div");
-        
-        d.innerHTML="<span></span><span>"+cards[i]+"</span>";
-        
-        deck.appendChild(d);
-    }
-    var boxes=document.querySelectorAll(".memory_table>div");
-    boxes.forEach(el=> {
-        el.addEventListener('click',()=>{
-            openCard(el);
-        })
-    });
-};
+   var  initGame=()=> {
+        var cards = shuffle(symbols.concat(symbols));
+        while(deck.firstChild)
+            deck.removeChild(deck.firstChild);
+        match = 0;
+        moves = 0;
+        moveNum.innerHTML= moves;
+        for (var i = 0; i < cards.length; i++) {
+            var d= document.createElement("div");
+            
+            d.innerHTML="<span></span><span>"+cards[i]+"</span>";
+            
+            deck.appendChild(d);
+        }
+        var boxes=document.querySelectorAll(".memory_table>div");
+        boxes.forEach(el=> {
+            el.addEventListener('click',()=>{
+                console.log(opened.length)
+                if(opened.length<2)
+                    openCard(el);
+            })
+        });
+    };
     initGame();
 }
 document.addEventListener("DOMContentLoaded", () => {
