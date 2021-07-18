@@ -716,7 +716,7 @@ function memory() {
         moves = 0,
         deck = document.querySelector('#memory .memory_table'),
         moveNum = document.querySelector('#memory #memory_bar'),
-        ratingStars = document.querySelector('#memory .stars>*'),
+        reset = document.querySelector('#memory .reset'),
         restart = document.querySelector('#memory .restart'),
         matchesToWin = 8;
         const flipCard = document.querySelector('#memory .flip-card');
@@ -734,7 +734,15 @@ function memory() {
         }
         return array;
     }
-
+    
+    document.querySelector("#memory .reset").onclick = () => {
+        initGame();
+        flipCard.classList.remove("active");
+    };
+    document.querySelector("#memory .again").onclick = () => {
+        initGame();
+        flipCard.classList.remove("active");
+    };
     var openCard=(d)=> {
         d.classList.add("open");
         var card =d.innerHTML;
@@ -776,6 +784,7 @@ function memory() {
             deck.removeChild(deck.firstChild);
         match = 0;
         moves = 0;
+        opened=[];
         moveNum.innerHTML= moves;
         for (var i = 0; i < cards.length; i++) {
             var d= document.createElement("div");
