@@ -266,12 +266,12 @@ nav>button>svg line {
   transition: all 0.4s;
 }
 
-nav>a {
+nav>div {
   gap: 0.5rem;
   font-size: 1.7rem;
 }
 
-nav>a>svg {
+nav>div>svg {
   height: 2.6rem !important;
   width: 2.6rem !important;
 }
