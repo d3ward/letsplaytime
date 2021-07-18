@@ -7,7 +7,7 @@
     "theme_color": "#334FAC",
     "orientation": "portrait",
     "scope":"/",
-    "start_url":"https://github.com/d3ward/letsplay/index.html",
+    "start_url":"https://d3ward.github.io/letsplay/",
     "icons": [
         {
          "src":"./png/icon128.png",
