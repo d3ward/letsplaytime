@@ -3,9 +3,11 @@
     "description": "Don't have pen and paper? No problem! Play the classic Tic Tac Toe game in your browser!",
     "author": "d3ward",
     "display": "standalone",
+    "background_color": "#334FAC",
+    "theme_color": "#334FAC",
     "orientation": "portrait",
     "scope":"/",
-    "start_url":"/index.html",
+    "start_url":"https://github.com/d3ward/letsplay/",
     "icons": [
         {
          "src":"./png/icon128.png",
@@ -33,9 +35,9 @@
          "type":"image/png"
         },
         {
-         "src":"./svg/letsplay_logo.svg",
-         "size":"72x72 96x96 128x128 256x256 512x512"
-        }
-      ],
-    "homepage_url": "https://github.com/d3ward/letsplay/"
+            "src":"./png/icon512.png",
+            "size":"512x512",
+            "type":"image/png"
+           }
+      ]
 }
