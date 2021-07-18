@@ -1,54 +1,36 @@
-var cacheName = 'letsplay_v0.0.1';
 
 var appShellFiles = [
-    '.',
-    'index.html',
-    'script.js',
-    'style.css',
-    'manifest.json',
-    'confetti.browser.min.js',
-    'icons/favicon/favicon.ico'
+    'src/svg/c4_p.svg',
+    'src/svg/memory_p.svg',
+    'src/svg/tris_p.svg',
+    'src/svg/letsplay_light.svg',
+    'src/svg/letsplay_logo.svg',
+    'src/svg/letsplay.svg',
 ];
+// Choose a cache name
+const cacheName = 'letsplay-v0.0.1';
+// List the files to precache
+const precacheResources = ['/', '/index.html', '/css/style.css', '/js/main.js', '/js/confetti.browser.min.js'];
 
-self.addEventListener('install', (e) => {
-    console.log('[Service Worker] Install');
-    e.waitUntil(
-        caches.open(cacheName).then((cache) => {
-            console.log('[Service Worker] Caching all: app shell and content');
-            return cache.addAll(appShellFiles);
-        })
-    );
+// When the service worker is installing, open the cache and add the precache resources to it
+self.addEventListener('install', (event) => {
+  console.log('Service worker install event!');
+  event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(precacheResources)));
 });
 
-self.addEventListener('fetch', (e) => {
-    e.respondWith(
-        caches.match(e.request).then((r) => {
-            console.log('[Service Worker] Fetching resource: ' + e.request.url);
-            return r || fetch(e.request).then((response) => {
-                return caches.open(cacheName).then((cache) => {
-                    console.log('[Service Worker] Caching new resource: ' + e.request.url);
-                    cache.put(e.request, response.clone());
-                    return response;
-                });
-            });
-        })
-    );
+self.addEventListener('activate', (event) => {
+  console.log('Service worker activate event!');
 });
 
-self.addEventListener('activate', (e) => {
-    e.waitUntil(
-        caches.keys().then((keyList) => {
-            return Promise.all(keyList.map((key) => {
-                if (key !== cacheName) {
-                    return caches.delete(key);
-                }
-            }));
-        })
-    );
-});
-
-self.addEventListener('message', function (event) {
-    if (event.data.action === 'skipWaiting') {
-        self.skipWaiting();
-    }
+// When there's an incoming fetch request, try and respond with a precached resource, otherwise fall back to the network
+self.addEventListener('fetch', (event) => {
+  console.log('Fetch intercepted for:', event.request.url);
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request);
+    }),
+  );
 });

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="./src/svg/letsplay_light.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="./svg/letsplay_light.svg" type="image/svg+xml">
 
     <!-- Primary Meta Tags -->
     <title>Let's Play</title>
@@ -16,7 +16,7 @@
     <meta name="theme-color" content="#ffffff" />
 
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
@@ -157,7 +157,7 @@
                                     <svg class="_icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13 7H7v6h6V7z"></path><path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd"></path></svg>
                                 </div>
                             </div>
-                            <img src="./src/svg/tris_p.svg" alt="" class="full">
+                            <img src="./svg/tris_p.svg" alt="" class="full">
                             <h3>Tic Tac Toe</h3>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                                     
                                 </div>
                             </div>
-                            <img src="./src/svg/c4_p.svg" alt="" class="full">
+                            <img src="./svg/c4_p.svg" alt="" class="full">
                             <h3>Forza 4</h3>
                         </div>
                     </div>
@@ -182,7 +182,7 @@
                                     <svg class="_icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                                 </div>
                             </div>
-                            <img src="./src/svg/memory_p.svg" alt="" class="full">
+                            <img src="./svg/memory_p.svg" alt="" class="full">
                             <h3>Memory Tiles</h3>
                         </div>
                     </div>
@@ -391,68 +391,25 @@
             </section>
         </div>
     </main>
-    <script src="confetti.browser.min.js"></script>
-    <script src="script.js"></script>
+    <script src="./js/confetti.browser.min.js"></script>
+    <script src="./js/main.js"></script>
 
     <script>
+       
+        // Register the service worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js', {
-                scope: '.' // <--- THIS BIT IS REQUIRED
-            }).then(function (registration) {
-                // Registration was successful
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function (err) {
-                // registration failed :(
-                console.log('ServiceWorker registration failed: ', err);
-            });
+        // Wait for the 'load' event to not block other work
+        window.addEventListener('load', async () => {
+            // Try to register the service worker.
+            try {
+            const reg = await navigator.serviceWorker.register('/sw.js');
+            console.log('Service worker registered! 😎', reg);
+            } catch (err) {
+            console.log('😥 Service worker registration failed: ', err);
+            }
+        });
         }
 
-        let newWorker;
-
-        // The click event on the notification
-        document.getElementById('reload').addEventListener('click', function () {
-            newWorker.postMessage({
-                action: 'skipWaiting'
-            });
-        });
-
-        if ('serviceWorker' in navigator) {
-            // Register the service worker
-            navigator.serviceWorker.register('sw.js').then(reg => {
-                reg.addEventListener('updatefound', () => {
-
-                    // An updated service worker has appeared in reg.installing!
-                    newWorker = reg.installing;
-
-                    newWorker.addEventListener('statechange', () => {
-
-                        // Has service worker state changed?
-                        switch (newWorker.state) {
-                            case 'installed':
-
-                                // There is a new service worker available, show the notification
-                                if (navigator.serviceWorker.controller) {
-                                    let notification = document.getElementById('notification');
-                                    notification.className = 'show';
-                                }
-
-                                break;
-                        }
-                    });
-                });
-            });
-
-        }
-
-        let refreshing;
-        // The event listener that is fired when the service worker updates
-        // Here we reload the page
-        navigator.serviceWorker.addEventListener('controllerchange', function () {
-            if (refreshing) return;
-            console.log("Reloading...");
-            window.location.reload();
-            refreshing = true;
-        });
     </script>
 
 
